@@ -19,7 +19,7 @@ class OpenCLEnvironmentProvider(BaseEnvironmentProvider):
 		self.platform = platform
 		self.mf = cl.mem_flags
 
-	def create_context_queue_and_kernel(self):
+	def initialize(self):
 		devices = cl.get_platforms()[self.platform].get_devices()
 		self.ctx = cl.Context(devices)
 		self.queue = cl.CommandQueue(self.ctx)
@@ -27,7 +27,7 @@ class OpenCLEnvironmentProvider(BaseEnvironmentProvider):
 
 	def get_environment(self, atoms):
 		if self.kernel is None:
-			self.create_context_queue_and_kernel()
+			self.initialize()
 
 		n_atoms = np.uint32(len(atoms))
 		cell = np.array(atoms.cell, order='C').astype(np.float32)
