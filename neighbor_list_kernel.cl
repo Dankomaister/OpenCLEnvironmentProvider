@@ -6,16 +6,14 @@ __kernel void neighbor_list_cl(__global float3 *scaled_positions, __global float
 	float c31, float c32, float c33)
 {
 	uint i = get_global_id(0);
-	uint I = max_nbh*i;
-	int k = 0;
+	uint k = max_nbh*i;
 
-	float d_sq;
+	float R_sq;
 	float cutoff_sq = cutoff*cutoff - 0.000001f;
 
 	float3 local_position = scaled_positions[i];
 
 	float3 ds = (float3)(0.0f);
-	float3 dr = (float3)(0.0f);
 	float3 o  = (float3)(0.0f);
 
 	float3 a = (float3)(c11, c12, c13);
@@ -29,31 +27,31 @@ __kernel void neighbor_list_cl(__global float3 *scaled_positions, __global float
 
 	for(int r1 = -n1; r1 < n1+1; r1++)
 	{
-		for(int r2 = -n2; r2 < n2+1; r2++)
+	for(int r2 = -n2; r2 < n2+1; r2++)
+	{
+	for(int r3 = -n3; r3 < n3+1; r3++)
+	{
+		float3 shift = (float3)(r1, r2, r3);
+
+		for (uint j = 0u; j < n_atoms; j++)
 		{
-			for(int r3 = -n3; r3 < n3+1; r3++)
+			if (i == j && r1 == 0 && r2 == 0 && r3 == 0) continue;
+
+			ds = scaled_positions[j] - local_position;
+			o  = -round(ds) + shift;
+			ds = ds + o;
+
+			ds = ds.x*a + ds.y*b + ds.z*c;
+			R_sq = ds.x*ds.x + ds.y*ds.y + ds.z*ds.z;
+
+			if (R_sq < cutoff_sq)
 			{
-				float3 shift = (float3)(r1, r2, r3);
-
-				for (uint j = 0u; j < n_atoms; j++)
-				{
-					if (i == j && r1 == 0 && r2 == 0 && r3 == 0) continue;
-
-					ds = scaled_positions[j] - local_position;
-					o  = -round(ds) + shift;
-					ds = ds + o;
-
-					dr = ds.x*a + ds.y*b + ds.z*c;
-					d_sq = dot(dr, dr);
-
-					if (d_sq < cutoff_sq)
-					{
-						offset[I + k]  = o;
-						neighborhood_idx[I + k] = j;
-						k++;
-					}
-				}
+				neighborhood_idx[k] = j;
+				offset[k] = o;
+				k++;
 			}
 		}
+	}
+	}
 	}
 }
