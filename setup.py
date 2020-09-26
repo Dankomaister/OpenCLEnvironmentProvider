@@ -7,7 +7,7 @@ setup(
 	author='Daniel Hedman',
 	author_email='daniel.hedman@ltu.se',
 	url='https://github.com/Dankomaister/OpenCLEnvironmentProvider',
-	packages=['OpenCLEnvironmentProvider'],
+	#packages=['OpenCLEnvironmentProvider'],
 	#scripts=['OpenCLEnvironmentProvider/environment.py'],
 	packages=find_packages(),
 	package_data={'': [
