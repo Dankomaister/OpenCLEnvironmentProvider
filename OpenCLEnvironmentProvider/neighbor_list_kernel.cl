@@ -54,4 +54,8 @@ __kernel void neighbor_list_cl(__global float3 *scaled_positions, __global float
 	}
 	}
 	}
+	if (k > max_nbh)
+	{
+		printf("\nWARNING! found %i neighbours for atom %i which larger than max_nbh=%i.\n         try and increase number_density", k, i, max_nbh);
+	}
 }
