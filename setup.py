@@ -10,10 +10,8 @@ setup(
 	#packages=['OpenCLEnvironmentProvider'],
 	#scripts=['OpenCLEnvironmentProvider/environment.py'],
 	packages=find_packages(),
-	package_data={'': [
-		'OpenCLEnvironmentProvider/neighbor_list_kernel.cl'
-		]
-	},
+	package_data={'': ['neighbor_list_kernel.cl']},
+	include_package_data=True,
 	python_requires='>=3.6',
 	install_requires=[
 		'pyopencl',
@@ -21,6 +19,5 @@ setup(
 		'schnetpack'
 	],
 	license='MIT',
-	description='OpenCL environment provider for SchNetPack',
-	include_package_data=True
+	description='OpenCL environment provider for SchNetPack'
 )
