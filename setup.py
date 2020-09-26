@@ -1,5 +1,5 @@
 
-from setuptools import setup
+from setuptools import setup, find_packages
 
 setup(
 	name='OpenCLEnvironmentProvider',
@@ -8,9 +8,11 @@ setup(
 	author_email='daniel.hedman@ltu.se',
 	url='https://github.com/Dankomaister/OpenCLEnvironmentProvider',
 	packages=['OpenCLEnvironmentProvider'],
-	scripts=['OpenCLEnvironmentProvider/environment.py'],
-	package_data={
-		'OpenCLEnvironmentProvider': ['OpenCLEnvironmentProvider/neighbor_list_kernel.cl']
+	#scripts=['OpenCLEnvironmentProvider/environment.py'],
+	packages=find_packages(),
+	package_data={'': [
+		'OpenCLEnvironmentProvider/neighbor_list_kernel.cl'
+		]
 	},
 	python_requires='>=3.6',
 	install_requires=[
@@ -19,5 +21,6 @@ setup(
 		'schnetpack'
 	],
 	license='MIT',
-	description='OpenCL environment provider for SchNetPack'
+	description='OpenCL environment provider for SchNetPack',
+	include_package_data=True
 )
