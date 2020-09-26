@@ -5,7 +5,7 @@ setup(
 	name='OpenCLEnvironmentProvider',
 	version='0.0.1',
 	author='Daniel Hedman',
-	email='daniel.hedman@ltu.se',
+	author_email='daniel.hedman@ltu.se',
 	url='https://github.com/Dankomaister/OpenCLEnvironmentProvider',
 	packages=['OpenCLEnvironmentProvider'],
 	scripts=['OpenCLEnvironmentProvider/environment'],
