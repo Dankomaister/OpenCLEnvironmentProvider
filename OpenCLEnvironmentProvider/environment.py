@@ -13,7 +13,7 @@ class OpenCLEnvironmentProvider(BaseEnvironmentProvider):
 			cutoff (float): the cutoff inside which atoms are considered pairs
 		"""
 		self.cutoff = np.float32(cutoff)
-		self.max_nbh = np.uint32(round(4/3*np.pi*cutoff**3 * number_density))
+		self.max_nbh = np.uint32(np.ceil(4/3*np.pi*cutoff**3 * number_density))
 
 		self.kernel_code = ''.join(open(os.path.dirname(os.path.realpath(__file__)) + '/neighbor_list_kernel.cl', 'r').readlines())
 		self.kernel = None
