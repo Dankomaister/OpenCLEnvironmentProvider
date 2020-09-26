@@ -55,7 +55,7 @@ class OpenCLEnvironmentProvider(BaseEnvironmentProvider):
 
 		e2.wait()
 		u_idx, n_nbh = np.unique(neighborhood_idx, return_counts=True)
-		if len(u_idx):
+		if len(u_idx) > 1:
 			I = np.max(n_nbh[u_idx != -1])
 		else:
 			I = 1
