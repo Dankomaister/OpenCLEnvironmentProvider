@@ -1,3 +1,3 @@
 
-from src import environment
+from src.environment import *
 #from OpenCLEnvironmentProvider import environment
