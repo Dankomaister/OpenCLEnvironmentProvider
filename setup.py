@@ -8,7 +8,7 @@ setup(
 	author_email='daniel.hedman@ltu.se',
 	url='https://github.com/Dankomaister/OpenCLEnvironmentProvider',
 	packages=['OpenCLEnvironmentProvider'],
-	scripts=['OpenCLEnvironmentProvider/environment'],
+	scripts=['OpenCLEnvironmentProvider/environment.py'],
 	python_requires='>=3.6',
 	install_requires=[
 		'pyopencl',
