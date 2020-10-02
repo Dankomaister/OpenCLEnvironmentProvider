@@ -7,7 +7,7 @@ from schnetpack.environment import BaseEnvironmentProvider
 class OpenCLEnvironmentProvider(BaseEnvironmentProvider):
 	"""docstring for OpenCLEnvironmentProvider"""
 
-	def __init__(self, cutoff, platform=0, number_density=0.25, cache_dir=None):
+	def __init__(self, cutoff, platform=0, number_density=0.25):
 		"""
 		Args:
 			cutoff (float): the cutoff inside which atoms are considered pairs
@@ -17,7 +17,6 @@ class OpenCLEnvironmentProvider(BaseEnvironmentProvider):
 
 		self.kernel_code = ''.join(open(os.path.dirname(os.path.realpath(__file__)) + '/neighbor_list_kernel.cl', 'r').readlines())
 		self.kernel = None
-		self.cache_dir = cache_dir
 		self.platform = platform
 		self.mf = cl.mem_flags
 
@@ -25,7 +24,7 @@ class OpenCLEnvironmentProvider(BaseEnvironmentProvider):
 		devices = cl.get_platforms()[self.platform].get_devices()
 		self.ctx = cl.Context(devices)
 		self.queue = cl.CommandQueue(self.ctx)
-		self.kernel = cl.Program(self.ctx, self.kernel_code).build(cache_dir=self.cache_dir)
+		self.kernel = cl.Program(self.ctx, self.kernel_code).build()
 
 	def get_environment(self, atoms):
 		if self.kernel is None:
