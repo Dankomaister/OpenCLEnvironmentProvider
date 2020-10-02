@@ -8,12 +8,10 @@ __kernel void neighbor_list_cl(__global float3 *scaled_positions, __global float
 	uint i = get_global_id(0);
 	uint k = max_nbh*i;
 
-	float R_sq;
-	//float cutoff_sq = cutoff*cutoff - 0.000001f;
+	float R_sq = 0.0f;
 	float cutoff_sq = cutoff*cutoff;
 
 	float3 local_position = scaled_positions[i];
-
 	float3 ds = (float3)(0.0f);
 	float3 o  = (float3)(0.0f);
 

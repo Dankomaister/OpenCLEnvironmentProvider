@@ -31,19 +31,19 @@ class OpenCLEnvironmentProvider(BaseEnvironmentProvider):
 			self.initialize()
 
 		n_atoms = np.uint32(len(atoms))
-		cell = np.array(atoms.cell, order='C').astype(np.float32)
-		positions = np.array(atoms.positions, order='C').astype(np.float32)
-
+		cell = np.array(atoms.cell, order='C')
+		positions = np.array(atoms.positions, order='C')
 		scaled_positions = np.zeros((n_atoms,4), dtype=np.float32, order='C')
-		scaled_positions[:,0:3] = np.linalg.solve(cell.T, positions.T).T
+		scaled_positions[:,0:3] = np.linalg.solve(cell.T, positions.T).T.astype(np.float32)
 
 		neighborhood_idx = -np.ones((n_atoms,self.max_nbh), dtype=np.int32, order='C')
 		offset = np.zeros((n_atoms,self.max_nbh), dtype=cl.cltypes.float3, order='C')
 
 		b_scaled_positions = cl.Buffer(self.ctx, self.mf.READ_ONLY | self.mf.COPY_HOST_PTR, hostbuf=scaled_positions)
-		b_offset = cl.Buffer(self.ctx, self.mf.READ_WRITE | self.mf.COPY_HOST_PTR, hostbuf=offset)
 		b_neighborhood_idx = cl.Buffer(self.ctx, self.mf.READ_WRITE | self.mf.COPY_HOST_PTR, hostbuf=neighborhood_idx)
+		b_offset = cl.Buffer(self.ctx, self.mf.READ_WRITE | self.mf.COPY_HOST_PTR, hostbuf=offset)
 
+		cell = cell.astype(np.float32)
 		self.kernel.neighbor_list_cl(self.queue, (n_atoms,), None, b_scaled_positions, b_offset, b_neighborhood_idx,
 			n_atoms, self.max_nbh, self.cutoff,
 			cell[0,0], cell[0,1], cell[0,2],
@@ -54,10 +54,10 @@ class OpenCLEnvironmentProvider(BaseEnvironmentProvider):
 		e2 = cl.enqueue_copy(self.queue, neighborhood_idx, b_neighborhood_idx)
 
 		e2.wait()
-		u_idx, n_nbh = np.unique(neighborhood_idx, return_counts=True)
-		if len(u_idx) > 1:
-			I = np.max(n_nbh[u_idx != -1])
-		else:
+		tmp = neighborhood_idx.copy()
+		tmp[tmp != -1] = 0
+		I = int(self.max_nbh + np.max(np.sum(tmp, 1)))
+		if I == 0:
 			I = 1
 		e1.wait()
 
