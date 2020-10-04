@@ -17,7 +17,6 @@ class OpenCLEnvironmentProvider(BaseEnvironmentProvider):
 
 		self.kernel_code = ''.join(open(os.path.dirname(os.path.realpath(__file__)) + '/neighbor_list_kernel.cl', 'r').readlines())
 		self.kernel = None
-		self.printed = False
 		self.platform = platform
 		self.mf = cl.mem_flags
 
@@ -26,9 +25,7 @@ class OpenCLEnvironmentProvider(BaseEnvironmentProvider):
 		self.ctx = cl.Context(devices)
 		self.queue = cl.CommandQueue(self.ctx)
 		self.kernel = cl.Program(self.ctx, self.kernel_code).build()
-		if not self.printed:
-			print('OpenCLEnvironmentProvider initialized on: %s' % devices[0])
-			self.printed = True
+		print('OpenCLEnvironmentProvider initialized on: %s' % devices[0])
 
 	def get_environment(self, atoms):
 		if self.kernel is None:
