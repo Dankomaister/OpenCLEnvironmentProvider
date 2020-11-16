@@ -57,12 +57,17 @@ class OpenCLEnvironmentProvider(BaseEnvironmentProvider):
 		e2.wait()
 		tmp = neighborhood_idx.copy()
 		tmp[tmp != -1] = 0
-		I = int(self.max_nbh + np.max(np.sum(tmp, 1)))
+		I = np.uint32(self.max_nbh + np.max(np.sum(tmp,1)))
 		if I == 0:
 			I = 1
-		e1.wait()
 
-		return neighborhood_idx[:,0:I], np.stack((offset[:,0:I]['x'], offset[:,0:I]['y'], offset[:,0:I]['z']), axis=2)
+		offset_out = np.zeros((n_atoms,I,3), dtype=np.float64, order='C')
+		e1.wait()
+		offset_out[:,:,0] = offset[:,0:I]['x']
+		offset_out[:,:,1] = offset[:,0:I]['y']
+		offset_out[:,:,2] = offset[:,0:I]['z']
+
+		return neighborhood_idx[:,0:I], offset_out
 
 class OpenCLEnvironmentProviderFloat(BaseEnvironmentProvider):
 	"""docstring for OpenCLEnvironmentProvider"""
@@ -117,9 +122,15 @@ class OpenCLEnvironmentProviderFloat(BaseEnvironmentProvider):
 		e2.wait()
 		tmp = neighborhood_idx.copy()
 		tmp[tmp != -1] = 0
-		I = int(self.max_nbh + np.max(np.sum(tmp, 1)))
+		I = np.uint32(self.max_nbh + np.max(np.sum(tmp,1)))
 		if I == 0:
 			I = 1
 		e1.wait()
 
-		return neighborhood_idx[:,0:I], np.stack((offset[:,0:I]['x'], offset[:,0:I]['y'], offset[:,0:I]['z']), axis=2)
+		offset_out = np.zeros((n_atoms,I,3), dtype=np.float32, order='C')
+		e1.wait()
+		offset_out[:,:,0] = offset[:,0:I]['x']
+		offset_out[:,:,1] = offset[:,0:I]['y']
+		offset_out[:,:,2] = offset[:,0:I]['z']
+
+		return neighborhood_idx[:,0:I], offset_out
