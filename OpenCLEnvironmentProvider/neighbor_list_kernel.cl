@@ -55,7 +55,7 @@ __kernel void neighbor_list_double(__global double3 *scaled_positions, __global 
 	}
 	if (k - max_nbh*i > max_nbh)
 	{
-		printf("\nWARNING! found %i neighbours for atom %i which larger than max_nbh=%i.\n         try and increase number_density", k, i, max_nbh);
+		printf("\nWARNING! found %i neighbours for atom %i which larger than max_nbh=%i.\n         try and increase number_density", k - max_nbh*i, i, max_nbh);
 	}
 }
 
@@ -115,6 +115,6 @@ __kernel void neighbor_list_float(__global float3 *scaled_positions, __global fl
 	}
 	if (k - max_nbh*i > max_nbh)
 	{
-		printf("\nWARNING! found %i neighbours for atom %i which larger than max_nbh=%i.\n         try and increase number_density", k, i, max_nbh);
+		printf("\nWARNING! found %i neighbours for atom %i which larger than max_nbh=%i.\n         try and increase number_density", k - max_nbh*i, i, max_nbh);
 	}
 }
